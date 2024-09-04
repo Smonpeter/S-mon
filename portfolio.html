@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S!mon - Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="icon" type="image/png" href="images/Logo_page-500.png">
+    <style>
+        body {
+            background-color: #f0f4f8;
+            color: #4a5568;
+        }
+        .nav-link.active {
+            color: orange !important;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div id="app">
+        <!-- Navbar -->
+        <nav class="bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="index.html" class="text-xl font-bold">S!mon</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a v-for="item in navItems" :key="item.name" :href="item.link" @click.prevent="setActiveNavItem(item.name)" :class="['nav-link', 'hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                                {{ item.name }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button @click="toggleMobileMenu" class="text-gray-300 hover:bg-gray-700 hover:text-white px-2 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div v-show="mobileMenuOpen" class="md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a v-for="item in navItems" :key="item.name" :href="item.link" @click.prevent="handleMobileMenuClick(item.name)" :class="['nav-link', 'block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                        {{ item.name }}
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- About Me Section -->
+        <about-me></about-me>
+
+        <!-- Portfolio Section -->
+        <div class="container mx-auto px-4 py-8 mt-16">
+            <div id="portfolio-section">
+                <h2 class="text-3xl font-bold mb-8 text-center">My Portfolio</h2>
+
+                <!-- Updated Filter Menu -->
+                <div class="mb-8">
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <button v-for="filter in filters" :key="filter"
+                                @click="currentFilter = filter"
+                                :class="['px-3 py-2 text-sm font-medium transition-colors duration-300 ease-in-out rounded-md',
+                                         'focus:outline-none focus:ring-2 focus:ring-orange-500',
+                                         currentFilter === filter ?
+                                         'bg-orange-600 text-white' :
+                                         'bg-white text-gray-700 hover:bg-gray-100',
+                                         'border border-gray-200']">
+                            {{ filter }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Services and Projects -->
+                <div v-for="service in services" :key="service.title" class="mb-16" v-show="showService(service.title)">
+                    <h3 class="text-2xl font-semibold mb-6 pb-2 border-b-2 border-gray-300">{{ service.title }}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div v-for="project in filteredProjects(service.projects)" :key="project.name"
+                             class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                            <img :src="project.image" :alt="project.name" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-xl font-semibold mb-2">{{ project.name }}</h4>
+                                <p class="text-gray-600 mb-4">{{ project.description }}</p>
+                                <a :href="project.link" class="text-blue-500 hover:underline">
+                                    {{ service.linkText }} <i class="fas fa-external-link-alt ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8 mt-auto">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Important Links -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Important Links</h3>
+                        <ul class="space-y-2">
+                            <li v-for="item in navItems" :key="item.name">
+                                <a :href="item.link" class="hover:text-gray-300 transition-colors duration-300">{{ item.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Social Media -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Social Media</h3>
+                        <div class="flex space-x-4">
+                            <a v-for="(icon, name) in socialMedia" :key="name" :href="icon.url" class="text-2xl hover:text-gray-300 transition-colors duration-300" :aria-label="name">
+                                <i :class="icon.class"></i>
+                            </a>
+                        </div>
+                        <div class="flex space-x-4 mt-8">
+                            <p>&copy;2024</p>
+                            <p> Designed and Built by <a href=""  style="all:unset; color: olive; cursor: pointer;">S!mon </a></p>
+                        </div>
+                    </div>
+                    <!-- Contact Information -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                        <p>00100, University Way, Nairobi Kenya</p>
+                        <p>Email: info@abugas!mon.com</p>
+                        <p>Phone: +254 79988 5892</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+        setup() {
+            const navItems = ref([
+                { name: 'Home', link: 'index.html' },
+                { name: 'About', link: 'about.html' },
+                { name: 'Portfolio', link: 'portfolio.html' },
+                { name: 'Services', link: 'services.html' },
+                { name: 'Testimonials', link: 'index.html#testimonials' },
+                { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Blog', link: 'blog.html' }
+            ]);
+            const mobileMenuOpen = ref(false);
+            const activeNavItem = ref('Home');
+            const socialMedia = ref({
+                Facebook: { url: '#', class: 'fab fa-facebook' },
+                Youtube: { url: '#', class: 'fab fa-youtube' },
+                Whatsapp: { url: '#', class: 'fab fa-whatsapp' },
+                Instagram: { url: '#', class: 'fab fa-instagram' },
+                X: { url: '#', class: 'fab fa-twitter' },
+            });
+
+            // Portfolio section
+            const currentFilter = ref('All');
+            const filters = ['All', 'Web Development', 'Photography', 'Business Solutions'];
+
+            const services = [
+                {
+                    title: 'Web Development',
+                    linkText: 'Visit Website>',
+                    projects: [
+                        { name: 'E-commerce Platform', description: 'A fully responsive online store with secure checkout.', image: '/images/portfolio/commerce.jpeg', link: '#' },
+                        { name: 'Portfolio Website', description: 'A sleek, modern portfolio for a graphic designer.', image: '/images/portfolio/portfolio.jpeg', link: '#' },
+                        { name: 'Blog Engine', description: 'A custom-built blog engine with a user-friendly CMS.', image: '/images/portfolio/blog.jpeg', link: '#' },
+                        { name: 'Social Media Dashboard', description: 'An all-in-one dashboard for managing social media accounts.', image: '/images/portfolio/socii.jpeg', link: '#' },
+                        { name: 'Real Estate Listings', description: 'A dynamic property listing website with advanced search features.', image: '/images/portfolio/estate.jpeg', link: '#' }
+                    ]
+                },
+                {
+                    title: 'Photography',
+                    linkText: 'See More Photos>',
+                    projects: [
+                        { name: 'Wedding Collection', description: 'Capturing beautiful moments from a rustic outdoor wedding.', image: '/images/portfolio/wedding.jpg', link: '#' },
+                        { name: 'Urban Landscapes', description: 'A series showcasing the beauty of city architecture.', image: '/images/portfolio/nairobi.jpeg', link: '#' },
+                        { name: 'Product Photography', description: 'High-quality product shots for an e-commerce client.', image: 'https://img.freepik.com/free-photo/product-photography-shoot-shoes_53876-137635.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'Nature Close-ups', description: 'Macro photography revealing the intricate details of nature.', image: '/images/portfolio/nature.jpg', link: '#' },
+                        { name: 'Event Coverage', description: 'Comprehensive photo coverage of a major corporate event.', image: 'https://img.freepik.com/premium-photo/photographer-with-camera_884653-23112.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' }
+                    ]
+                },
+                {
+                    title: 'Business Solutions',
+                    linkText: 'Learn More>',
+                    projects: [
+                        { name: 'ERP Implementation', description: 'Successfully deployed an ERP system for a manufacturing company.', image: 'https://img.freepik.com/free-photo/side-view-people-working-together_23-2149831292.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'Digital Transformation', description: 'Guided a traditional retailer through a digital transformation journey.', image: 'https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041864.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'Supply Chain Optimization', description: 'Streamlined the supply chain process for a global distributor.', image: 'https://img.freepik.com/free-photo/young-worker-organizing-products-depot-listening-music-headset-while-he-works-quality-control-warehouse-employee-checking-logistics-tablet-retail-store-delivery_482257-69571.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'CRM Integration', description: 'Integrated a custom CRM solution for improved customer management.', image: 'https://img.freepik.com/premium-photo/professional-crm-image-with-advanced-software-interface_1199394-108989.jpg?size=626&ext=jpg&ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'Business Intelligence Dashboard', description: 'Developed a BI dashboard for data-driven decision making.', image: 'https://img.freepik.com/free-photo/office-employee-analyzing-business-charts-computer-documents-looking-online-research-data-create-presentation-working-with-information-report-statistics-pc_482257-51736.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' }
+                    ]
+                }
+            ];
+
+            const showService = (serviceTitle) => {
+                return currentFilter.value === 'All' || currentFilter.value === serviceTitle;
+            };
+
+            const filteredProjects = (projects) => {
+                if (currentFilter.value === 'All') {
+                    return projects;
+                }
+                return projects.filter(project => {
+                    const serviceTitle = services.find(s => s.projects.includes(project)).title;
+                    return serviceTitle === currentFilter.value;
+                });
+            };
+
+            const toggleMobileMenu = () => {
+                mobileMenuOpen.value = !mobileMenuOpen.value;
+            };
+
+            const setActiveNavItem = (itemName) => {
+                activeNavItem.value = itemName;
+                // Navigate to the corresponding page
+                const item = navItems.value.find(item => item.name === itemName);
+                if (item) {
+                    window.location.href = item.link;
+                }
+            };
+
+            const handleMobileMenuClick = (itemName) => {
+                setActiveNavItem(itemName);
+                toggleMobileMenu();
+            };
+
+            onMounted(() => {
+                // Set the active nav item based on the current URL
+                const currentPath = window.location.pathname;
+                const currentItem = navItems.value.find(item => currentPath.endsWith(item.link));
+                if (currentItem) {
+                    activeNavItem.value = currentItem.name;
+                }
+            });
+
+            return {
+                navItems,
+                mobileMenuOpen,
+                activeNavItem,
+                socialMedia,
+                currentFilter,
+                filters,
+                services,
+                showService,
+                filteredProjects,
+                toggleMobileMenu,
+                setActiveNavItem,
+                handleMobileMenuClick
+            };
+        }
+    }).mount('#app');
+    </script>
+</body>
+</html>

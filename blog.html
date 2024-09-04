@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S!mon - Blog</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="icon" type="image/png" href="images/Logo_page-500.png">
+    <style>
+        body {
+            background-color: #f7f3e9;
+            color: #4a4a4a;
+        }
+        .card {
+            background-color: #fff;
+        }
+        .filter-button {
+            transition: background-color 0.3s;
+        }
+        .filter-button.active {
+            background-color: #ff7043;
+            color: #fff;
+        }
+        .post-title {
+            color: #d97706;
+        }
+        .author-name {
+            color: #ff7043;
+        }
+        .nav-link.active {
+            color: orange;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div id="app">
+        <!-- Navbar -->
+        <nav class="bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="index.html" class="text-xl font-bold">S!mon</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a v-for="item in navItems" :key="item.name" :href="item.link" @click="setActiveNavItem(item.name)" :class="['nav-link', 'hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                                {{ item.name }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button @click="toggleMobileMenu" class="text-gray-300 hover:bg-gray-700 hover:text-white px-2 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div v-show="mobileMenuOpen" class="md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a v-for="item in navItems" :key="item.name" :href="item.link" @click="handleMobileMenuClick(item.name)" :class="['nav-link', 'block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                        {{ item.name }}
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Blog Section -->
+        <div class="container mx-auto p-4 mt-20">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-orange-600">Blog</h1>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div v-for="post in paginatedPosts" :key="post.id" class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img :src="post.image" alt="Post Image" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-2xl font-bold mb-2 post-title">{{ post.title }}</h2>
+                        <p class="text-gray-600 mb-4">{{ post.excerpt }}</p>
+                        <div class="flex items-center mb-4">
+                            <img :src="post.authorImage" alt="Author Image" class="w-10 h-10 rounded-full mr-2">
+                            <div>
+                                <p class="font-semibold author-name">{{ post.author }}</p>
+                                <p class="text-gray-500 text-sm">{{ post.date }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex space-x-4">
+                                <button class="text-gray-600 hover:text-blue-500"><i class="fas fa-thumbs-up"></i> {{ post.likes }}</button>
+                                <button class="text-gray-600 hover:text-blue-500"><i class="fas fa-comments"></i> {{ post.comments }}</button>
+                                <button class="text-gray-600 hover:text-blue-500"><i class="fas fa-share"></i></button>
+                            </div>
+                            <a :href="post.link" class="text-blue-500 hover:underline" target="_blank">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-center">
+                <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 mx-1 bg-orange-500 text-green rounded disabled:opacity-50">Previous</button>
+                <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 mx-1 bg-orange-500 text-green rounded disabled:opacity-50">Next</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8 mt-auto">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Important Links -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Important Links</h3>
+                        <ul class="space-y-2">
+                            <li v-for="item in navItems" :key="item.name">
+                                <a :href="item.link" class="hover:text-gray-300 transition-colors duration-300">{{ item.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Social Media -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Social Media</h3>
+                        <div class="flex space-x-4">
+                            <a v-for="(icon, name) in socialMedia" :key="name" :href="icon.url" class="text-2xl hover:text-gray-300 transition-colors duration-300" :aria-label="name">
+                                <i :class="icon.class"></i>
+                            </a>
+                        </div>
+                        <div class="flex space-x-4 mt-8">
+                            <p>&copy;2024</p>
+                            <p> Designed and Built by <a href=""  style="all:unset; color: olive; cursor: pointer;">S!mon </a></p>
+                        </div>
+                    </div>
+                    <!-- Contact Information -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                        <p>00100, University Way, Nairobi Kenya</p>
+                        <p>Email: info@abugas!mon.com</p>
+                        <p>Phone: +254 79988 5892</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+        setup() {
+            const navItems = ref([
+                { name: 'Home', link: 'index.html' },
+                { name: 'About', link: 'about.html' },
+                { name: 'Portfolio', link: 'portfolio.html' },
+                { name: 'Services', link: 'services.html' },
+                { name: 'Testimonials', link: 'index.html#testimonials' },
+                { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Blog', link: 'blog.html' }
+            ]);
+            const mobileMenuOpen = ref(false);
+            const activeNavItem = ref('Blog');
+            const socialMedia = ref({
+                Facebook: { url: '#', class: 'fab fa-facebook' },
+                Youtube: { url: '#', class: 'fab fa-youtube' },
+                Whatsapp: { url: '#', class: 'fab fa-whatsapp' },
+                Instagram: { url: '#', class: 'fab fa-instagram' },
+                X: { url: '#', class: 'fab fa-twitter' },
+            });
+
+            const currentPage = ref(1);
+            const postsPerPage = ref(6);
+            const posts = ref([
+                { id: 1, image: '/images/blog/ruto.jpeg', title: 'Why Ruto Must Go', excerpt: 'There are a million Reasons as to why Ruto has to go, here are the top 26.', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'June 29, 2024', likes: 10, comments: 5, link: '#' },
+                { id: 2, image: 'https://img.freepik.com/free-photo/plant-growing-from-soil_23-2151729549.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Life and Death', excerpt: 'By becoming deeply aware of our mortality, we intensify our experience of every aspect of life..', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'April 3, 2024', likes: 20, comments: 10, link: 'https://docs.google.com/document/d/1PDwrz523lsHhhFaIOD7vhQ7aSzVwddegzarxFQm3W8E/edit?usp=sharing' },
+                { id: 3, image: 'https://img.freepik.com/free-photo/year-elegant-deadline-countdown-time_1203-5008.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Living in the Moment', excerpt: 'Before you know it, it’s 3 am and you are 80 years old and you can’t remember what it felt like to have 20 year old thoughts or a 10 year old heart.', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'May 3, 2024', likes: 30, comments: 15, link: '#' },
+                { id: 4, image: 'https://img.freepik.com/premium-photo/national-flag-kenya-old-stone-wall_116124-4359.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Pieces of a Broken Nation', excerpt: 'Imagine a tree that has stood tall for as long as you can remember. .', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'May 14, 2024', likes: 40, comments: 20, link: 'https://docs.google.com/document/d/17hQ3-Dk-9IU9BEb8wc8ty9kejx54kwh3KzlnkvtXMzs/edit?usp=sharing' },
+                { id: 5, image: 'https://img.freepik.com/free-photo/ai-technology-microchip-background-digital-transformation-concept_53876-124669.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Will AI replace Humans?', excerpt: 'Probably. Idk. But it depends on what you are doing.', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'June 15, 2024', likes: 50, comments: 25, link: '#' },
+                { id: 6, image: '/images/blog/politics.jpeg', title: 'Why Politics is Often a Contentious Game', excerpt: 'It\'s because everyone has an opinion and believes they are right..', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'June 24, 2024', likes: 60, comments: 30, link: '#' },
+                { id: 7, image: '/images/blog/pablo.jpeg', title: 'After Don Pablo Escobar...', excerpt: 'After died, what happened to the coke industry? Why don\'t we have another Escobar? .', author: 'Abuga Simon',authorImage: '/images/DV Photo 10.jpg', date: 'July 7, 2024', likes: 70, comments: 35, link: '#' },
+                // { id: 8, image: 'post8.jpg', title: 'Post Eight', excerpt: 'This is a short excerpt of the post.', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'July 10, 2024', likes: 80, comments: 40, link: '#' },
+                // { id: 9, image: 'post9.jpg', title: 'Post Nine', excerpt: 'This is a short excerpt of the post.', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'Aug 7, 2024', likes: 90, comments: 45, link: '#' },
+                // { id: 10, image: 'post10.jpg', title: 'Post Ten', excerpt: 'This is a short excerpt of the post.', author: 'Abuga Simon', authorImage: '/images/DV Photo 10.jpg', date: 'Aug 10, 2024', likes: 100, comments: 50, link: '#' },
+            ]);
+
+            const totalPages = computed(() => Math.ceil(posts.value.length / postsPerPage.value));
+            const paginatedPosts = computed(() => {
+                const start = (currentPage.value - 1) * postsPerPage.value;
+                const end = start + postsPerPage.value;
+                return posts.value.slice(start, end);
+            });
+
+            const toggleMobileMenu = () => {
+                mobileMenuOpen.value = !mobileMenuOpen.value;
+            };
+
+            const setActiveNavItem = (itemName) => {
+                activeNavItem.value = itemName;
+            };
+
+            const handleMobileMenuClick = (itemName) => {
+                setActiveNavItem(itemName);
+                toggleMobileMenu();
+            };
+
+            const prevPage = () => {
+                if (currentPage.value > 1) {
+                    currentPage.value--;
+                }
+            };
+
+            const nextPage = () => {
+                if (currentPage.value < totalPages.value) {
+                    currentPage.value++;
+                }
+            };
+
+            return {
+                navItems,
+                mobileMenuOpen,
+                activeNavItem,
+                socialMedia,
+                currentPage,
+                postsPerPage,
+                posts,
+                totalPages,
+                paginatedPosts,
+                toggleMobileMenu,
+                setActiveNavItem,
+                handleMobileMenuClick,
+                prevPage,
+                nextPage
+            };
+        }
+    }).mount('#app');
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S!mon</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="icon" type="image/png" href="images/Logo_page-500.png">
+    <style>
+        .orange-bullet li::before {
+            content: "\2022";
+            color: orange;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        .arrow-bullet li {
+            position: relative;
+            padding-left: 1.5em;
+        }
+        .arrow-bullet li::before {
+            content: '\f061';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            color: orange;
+            font-size: 0.8em;
+        }
+        .nav-link.active {
+            color: orange;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div id="app">
+        <!-- Navbar -->
+        <nav class="bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="index.html" class="text-xl font-bold">S!mon</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a v-for="item in navItems" :key="item.name" :href="item.link" @click="setActiveNavItem(item.name)" :class="['nav-link', 'hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                                {{ item.name }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button @click="toggleMobileMenu" class="text-gray-300 hover:bg-gray-700 hover:text-white px-2 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div v-show="mobileMenuOpen" class="md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a v-for="item in navItems" :key="item.name" :href="item.link" @click="handleMobileMenuClick(item.name)" :class="['nav-link', 'block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                        {{ item.name }}
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Home Section -->
+        <section id="home" class="relative h-screen flex items-center justify-center mt-16">
+            <!-- Background image -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fG9ubGluZSUyMHByZXNlbmNlfGVufDB8fDB8fHww" alt="Background" class="w-full h-full object-cover" />
+            </div>
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
+            <!-- Content -->
+            <div class="relative z-20 text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">S!mon </h1>
+                <h2 class="text-2xl md:text-2xl mb-12">Empower your brand with a strong online presence.</h2>
+                <a href="services.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                   Explore our Services >
+                </a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">About Us</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div v-for="item in aboutItems" :key="item.title" class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 text-green-600">{{ item.title }}</h3>
+                        <p class="mb-6">{{ item.description }}</p>
+                        <ul class="space-y-2 mb-6">
+                            <li v-for="point in item.points" :key="point" class="flex items-start">
+                                <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                <span>{{ point }}</span>
+                            </li>
+                        </ul>
+                        <a href="services.html" class="text-green-600 font-semibold hover:text-green-700 transition duration-300">
+                            Learn More <i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-16 bg-blue-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Our Services</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div
+                        v-for="service in services"
+                        :key="service.title"
+                        class="bg-gray-800 rounded-lg shadow-md p-6 text-white transform transition duration-300 hover:scale-105 hover:shadow-xl"
+                    >
+                        <div class="text-orange-500 text-4xl mb-4">
+                            <i :class="service.icon"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-orange-500 group-hover:text-white transition-colors duration-300">{{ service.title }}</h3>
+                        <p class="mb-6">{{ service.description }}</p>
+                        <ul class="space-y-2 mb-6 arrow-bullet">
+                            <li v-for="item in service.items" :key="item" class="pl-6 hover:text-orange-300 transition-colors duration-300">
+                                {{ item }}
+                            </li>
+                        </ul>
+                        <a href="#" class="text-orange-500 hover:text-orange-300 transition-colors duration-300">Learn more &gt;</a>
+                    </div>
+                </div>
+                <div class="text-right mt-8">
+                    <a href="services.html" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                        Explore more services &gt;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Animated Stats Section -->
+        <section id="stats" class="bg-sky-400 py-16">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div
+                        v-for="stat in stats"
+                        :key="stat.label"
+                        class="text-center p-6 rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                    >
+                        <div class="text-4xl font-bold mb-2 text-[#1C445E]">{{ stat.value }}</div>
+                        <div class="text-xl text-[#1C445E]">{{ stat.label }}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonial Section -->
+        <section id="testimonials" class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Client Testimonials</h2>
+                <div class="relative">
+                    <div class="flex justify-between items-center space-x-8">
+                        <div class="bg-white rounded-lg shadow-md p-6 flex-1 transition-all duration-500 ease-in-out">
+                            <div class="flex flex-col md:flex-row items-center mb-4">
+                                <img :src="testimonials[currentTestimonialIndex].image" :alt="testimonials[currentTestimonialIndex].name" class="w-16 h-16 rounded-full mb-4 md:mb-0 md:mr-4">
+                                <div class="flex-1 text-center md:text-left">
+                                    <p class="text-gray-800 mb-4">{{ testimonials[currentTestimonialIndex].feedback }}</p>
+                                    <p class="font-bold text-green-600">
+                                        {{ testimonials[currentTestimonialIndex].name }},
+                                        {{ testimonials[currentTestimonialIndex].position }} at
+                                        {{ testimonials[currentTestimonialIndex].company }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button @click="prevTestimonial" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-300">
+                        <i class="fas fa-chevron-left text-gray-800"></i>
+                    </button>
+                    <button @click="nextTestimonial" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-300">
+                        <i class="fas fa-chevron-right text-gray-800"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Contact Us</h2>
+                <div class="max-w-4xl mx-auto">
+                    <form @submit.prevent="submitForm" class="bg-white rounded-lg shadow-lg p-8" v-if="!showThankYou">
+                        <div class="mb-6">
+                            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                v-model="formData.name"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Your Name"
+                            >
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                v-model="formData.email"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="your@email.com"
+                            >
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                            <textarea
+                                id="message"
+                                v-model="formData.message"
+                                required
+                                rows="4"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Your message here..."
+                            ></textarea>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <button
+                                type="submit"
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
+                            >
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                    <div v-else class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold text-green-600 mb-4">Thank You!</h3>
+                        <p class="text-gray-700">
+                            Thank you for your message. We have received it and will respond to you as soon as possible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog CTA Section -->
+        <section class="py-8 pb-16 bg-gray-300">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-center items-center">
+                    <a href="blog.html" class="bg-orange-700 hover:bg-orange-800 text-white font-bold py-3 px-6 rounded-full transition duration-300ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50">
+        Click to read our Blog &gt;
+    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Important Links -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Important Links</h3>
+                        <ul class="space-y-2">
+                            <li v-for="item in navItems" :key="item.name">
+                                <a :href="item.link" class="hover:text-gray-300 transition-colors duration-300">{{ item.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Social Media -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Social Media</h3>
+                        <div class="flex space-x-4">
+                            <a v-for="(icon, name) in socialMedia" :key="name" :href="icon.url" class="text-2xl hover:text-gray-300 transition-colors duration-300" :aria-label="name">
+                                <i :class="icon.class"></i>
+                            </a>
+                        </div>
+                        <div class="flex space-x-4 mt-8">
+                            <p>&copy;2024</p>
+                            <p> Designed and Built by <a href=""  style="all:unset; color: olive; cursor: pointer;">S!mon </a></p>
+                        </div>
+                    </div>
+                    <!-- Contact Information -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                        <p>00100, University Way, Nairobi Kenya</p>
+                        <p>Email: info@abugas!mon.com</p>
+                        <p>Phone: +254 79988 5892</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    const { createApp, ref, onMounted, onUnmounted } = Vue;
+
+    createApp({
+        setup() {
+            const navItems = ref([
+                { name: 'Home', link: 'index.html' },
+                { name: 'About', link: 'about.html' },
+                { name: 'Portfolio', link: 'portfolio.html' },
+                { name: 'Services', link: 'services.html' },
+                { name: 'Testimonials', link: 'index.html#testimonials' },
+                { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Blog', link: 'blog.html' }
+            ]);
+            const mobileMenuOpen = ref(false);
+            const activeNavItem = ref('Home');
+            const socialMedia = ref({
+                Facebook: { url: '#', class: 'fab fa-facebook' },
+                Youtube: { url: '#', class: 'fab fa-youtube' },
+                Whatsapp: { url: '#', class: 'fab fa-whatsapp' },
+                Instagram: { url: '#', class: 'fab fa-instagram' },
+                X: { url: '#', class: 'fab fa-twitter' },
+            });
+
+            const aboutItems = ref([
+                {
+                    title: "Our Mission",
+                    description: "We are dedicated to empowering businesses with innovative digital solutions. Our mission is to transform ideas into impactful online presences that drive growth and success.",
+                    points: [
+                        "Client-centric approach",
+                        "Cutting-edge technology",
+                        "Sustainable digital strategies",
+                        "Continuous innovation",
+                        "Measurable results"
+                    ]
+                },
+                {
+                    title: "Our Team",
+                    description: "Our diverse team of experts brings together a wealth of experience in web development, design, marketing, and business strategy. We collaborate to deliver comprehensive solutions tailored to your unique needs.",
+                    points: [
+                        "Skilled professionals",
+                        "Cross-functional expertise",
+                        "Collaborative mindset",
+                        "Ongoing learning and development",
+                        "Passion for excellence"
+                    ]
+                },
+                {
+                    title: "Our Approach",
+                    description: "We believe in a holistic approach to digital success. By combining creativity, technology, and strategic thinking, we craft solutions that not only look great but also perform exceptionally well in the digital landscape.",
+                    points: [
+                        "Tailored strategies",
+                        "Data-driven decisions",
+                        "Agile methodology",
+                        "Transparent communication",
+                        "Long-term partnerships"
+                    ]
+                }
+            ]);
+
+            const stats = ref([
+                { label: 'Completed Projects', value: 0, target: 234 },
+                { label: 'Clients', value: 0, target: 180 },
+                { label: 'Team Members', value: 0, target: 30 },
+                { label: 'Locations', value: 0, target: 120 },
+            ]);
+
+            const services = ref([
+                {
+                    icon: 'fas fa-code',
+                    title: 'Web Development',
+                    description: 'We build engaging, high-performance websites tailored to your business needs using the latest technologies and design principles.',
+                    items: [
+                        'Website Development',
+                        'E-commerce Website Solutions',
+                        'Web Design & User Interface Design',
+                        'CMS Development',
+                        'Website Maintenance & Updates',
+                        'Website Speed & Performance Optimization',
+                        'Search Engine Optimization (SEO)',
+                        'API Integration & Development',
+                        'Accessibility Compliance (WCAG Standards)',
+                        'Web Development Consultation & Strategy'
+                    ]
+                },
+                {
+                    icon: 'fas fa-camera',
+                    title: 'Photography',
+                    description: 'Our professional photography services capture high-quality images that enhance your brand and connect with your audience.',
+                    items: [
+                        'Commercial Photography',
+                        'Product Photography',
+                        'Portrait Photography',
+                        'Event Photography',
+                        'Lifestyle Photography',
+                        'Photo Editing & Retouching',
+                        'Visual Content Creation'
+                    ]
+                },
+                {
+                    icon: 'fas fa-briefcase',
+                    title: 'Business Solutions',
+                    description: 'We provide strategic consultancy, outsourcing, and procurement services to optimize your operations and support business growth.',
+                    items: [
+                        'Consultancy Services',
+                        'Outsourcing Services',
+                        'Procurement Services',
+                        'Digital Marketing Solutions',
+                        'Branding & Strategy',
+                        'IT & Cloud Solutions',
+                        'Project Management'
+                    ]
+                }
+            ]);
+
+            const testimonials = ref([
+                {
+                    id: 1,
+                    image: 'https://plus.unsplash.com/premium_photo-1664908225642-170412e1d10e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fHw%3D',
+                    name: 'Eric Johnas',
+                    position: 'CEO',
+                    company: 'Tech Innovations',
+                    feedback: 'Working with this team has been an absolute pleasure. Their expertise and dedication have significantly improved our online presence.'
+                },
+                {
+                    id: 2,
+                    image: 'https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE5fHx8ZW58MHx8fHx8',
+                    name: 'Derrick Kimani',
+                    position: 'Marketing Director',
+                    company: 'Global Solutions',
+                    feedback: 'The website they created for us is not only visually stunning but also incredibly functional. It has helped us reach a wider audience.'
+                },
+                {
+                    id: 3,
+                    image: 'https://plus.unsplash.com/premium_photo-1699537317988-b0d94b666661?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cG9ydHJhaXQlMjBhcmFiaWMlMjBtYW58ZW58MHx8MHx8fDA%3D',
+                    name: 'Mohammed Farouk',
+                    position: 'Founder',
+                    company: 'Startup Success',
+                    feedback: 'Their attention to detail and innovative approach to web design have set us apart from our competitors. Highly recommended!'
+                },
+                {
+                    id: 4,
+                    image: 'https://plus.unsplash.com/premium_photo-1661730351855-346069d20ef5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmxhY2slMjB3b21hbnxlbnwwfHwwfHx8MA%3D%3D',
+                    name: 'Emily Brown',
+                    position: 'CTO',
+                    company: 'Data Dynamics',
+                    feedback: 'The teams technical expertise is unmatched. They delivered a complex web application that exceeded our expectations.'
+                }
+            ]);
+
+            const currentTestimonialIndex = ref(0);
+
+            const toggleMobileMenu = () => {
+                mobileMenuOpen.value = !mobileMenuOpen.value;
+            };
+
+            const setActiveNavItem = (itemName) => {
+                activeNavItem.value = itemName;
+            };
+
+            const handleMobileMenuClick = (itemName) => {
+                setActiveNavItem(itemName);
+                if (itemName.toLowerCase() === 'testimonials' || itemName.toLowerCase() === 'contact') {
+                    mobileMenuOpen.value = false;
+                }
+            };
+
+            const animateValue = (obj, start, end, duration) => {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    obj.value = Math.floor(progress * (end - start) + start);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            };
+
+            const animateStats = () => {
+                stats.value.forEach(stat => {
+                    animateValue(stat, 0, stat.target, 2000);
+                });
+            };
+
+            const prevTestimonial = () => {
+                currentTestimonialIndex.value = (currentTestimonialIndex.value - 1 + testimonials.value.length) % testimonials.value.length;
+            };
+
+            const nextTestimonial = () => {
+                currentTestimonialIndex.value = (currentTestimonialIndex.value + 1) % testimonials.value.length;
+            };
+
+            let testimonialTimer;
+
+            onMounted(() => {
+                animateStats();
+                testimonialTimer = setInterval(() => {
+                    nextTestimonial();
+                }, 8000);
+
+                window.addEventListener('scroll', handleScroll);
+            });
+
+            onUnmounted(() => {
+                clearInterval(testimonialTimer);
+                window.removeEventListener('scroll', handleScroll);
+            });
+
+            const formData = ref({
+                name: '',
+                email: '',
+                message: ''
+            });
+
+            const showThankYou = ref(false);
+
+            const submitForm = () => {
+                // Here you would typically send the form data to a server
+                console.log('Form submitted:', formData.value);
+
+                // Show thank you message
+                showThankYou.value = true;
+
+                // Reset form after submission
+                formData.value = { name: '', email: '', message: '' };
+
+                // Hide thank you message after 5 seconds and show form again
+                setTimeout(() => {
+                    showThankYou.value = false;
+                }, 5000);
+            };
+
+            const handleScroll = () => {
+                const sections = document.querySelectorAll('section');
+                const scrollPosition = window.scrollY + 100; // Add offset for navbar height
+
+                sections.forEach((section) => {
+                    if (section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
+                        setActiveNavItem(section.id.charAt(0).toUpperCase() + section.id.slice(1));
+                    }
+                });
+            };
+
+            return {
+                navItems,
+                mobileMenuOpen,
+                activeNavItem,
+                socialMedia,
+                aboutItems,
+                stats,
+                services,
+                testimonials,
+                currentTestimonialIndex,
+                toggleMobileMenu,
+                setActiveNavItem,
+                handleMobileMenuClick,
+                prevTestimonial,
+                nextTestimonial,
+                formData,
+                submitForm,
+                showThankYou
+            };
+        },
+    }).mount('#app');
+    </script>
+</body>
+</html>

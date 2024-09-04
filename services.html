@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S!mon - Our Services</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="icon" type="image/png" href="images/Logo_page-500.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e0f2fe;
+            color: #333333;
+
+            .nav-link.active {
+            color: orange;
+        }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div id="app">
+        <!-- Navbar -->
+        <nav class="bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="index.html" class="text-xl font-bold">S!mon</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a v-for="item in navItems" :key="item.name" :href="item.link" @click="setActiveNavItem(item.name)" :class="['nav-link', 'hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                                {{ item.name }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button @click="toggleMobileMenu" class="text-gray-300 hover:bg-gray-700 hover:text-white px-2 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div v-show="mobileMenuOpen" class="md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a v-for="item in navItems" :key="item.name" :href="item.link" @click="handleMobileMenuClick(item.name)" :class="['nav-link', 'block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                        {{ item.name }}
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8 mt-16">
+            <!-- Services Section -->
+            <section id="services">
+                <h1 class="text-4xl font-bold text-center mb-12 text-orange-600">Our Services</h1>
+                <div v-for="(section, index) in sections" :key="index" class="mb-12">
+                    <h2 class="text-2xl font-bold mb-6 text-orange-600 border-b-2 border-orange-600 pb-2">
+                        {{ section.title }}
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div v-for="(service, serviceIndex) in section.services" :key="serviceIndex"
+                            class="bg-gray-800 p-4 rounded-lg shadow-md">
+                            <div class="flex items-center mb-2">
+                                <i :class="['fas', service.icon, 'text-xl', 'text-orange-500', 'mr-3']"></i>
+                                <h3 class="text-lg font-semibold text-orange-600">{{ service.name }}</h3>
+                            </div>
+                            <p class="text-sm text-gray-300">{{ service.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Important Links -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Important Links</h3>
+                        <ul class="space-y-2">
+                            <li v-for="item in navItems" :key="item.name">
+                                <a :href="item.link" class="hover:text-gray-300 transition-colors duration-300">{{ item.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Social Media -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Social Media</h3>
+                        <div class="flex space-x-4">
+                            <a v-for="(icon, name) in socialMedia" :key="name" :href="icon.url" class="text-2xl hover:text-gray-300 transition-colors duration-300" :aria-label="name">
+                                <i :class="icon.class"></i>
+                            </a>
+                        </div>
+                        <div class="flex space-x-4 mt-8">
+                            <p>&copy;2024</p>
+                            <p> Designed and Built by <a href=""  style="all:unset; color: olive; cursor: pointer;">S!mon </a></p>
+                        </div>
+                    </div>
+                    <!-- Contact Information -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                        <p>00100, University Way, Nairobi Kenya</p>
+                        <p>Email: info@abugas!mon.com</p>
+                        <p>Phone: +254 79988 5892</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+        setup() {
+            const navItems = ref([
+                { name: 'Home', link: 'index.html' },
+                { name: 'About', link: 'about.html' },
+                { name: 'Portfolio', link: 'portfolio.html' },
+                { name: 'Services', link: 'services.html' },
+                { name: 'Testimonials', link: 'index.html#testimonials' },
+                { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Blog', link: 'blog.html' }
+            ]);
+            const mobileMenuOpen = ref(false);
+            const activeNavItem = ref('Services');
+            const socialMedia = ref({
+                Facebook: { url: '#', class: 'fab fa-facebook' },
+                Youtube: { url: '#', class: 'fab fa-youtube' },
+                Whatsapp: { url: '#', class: 'fab fa-whatsapp' },
+                Instagram: { url: '#', class: 'fab fa-instagram' },
+                X: { url: '#', class: 'fab fa-twitter' },
+            });
+
+            const sections = ref([
+                {
+                    title: 'Web Development',
+                    services: [
+                        { icon: 'fa-globe', name: 'Website Development', description: 'Create responsive, user-friendly websites tailored to your needs.' },
+                        { icon: 'fa-shopping-cart', name: 'E-commerce Solutions', description: 'Build online stores with secure payment gateways and inventory management.' },
+                        { icon: 'fa-paint-brush', name: 'Web Design', description: 'Craft visually appealing and intuitive user interfaces for your web projects.' },
+                        { icon: 'fa-th-large', name: 'CMS Development', description: 'Develop content management systems for easy website updates and management.' },
+                        { icon: 'fa-wrench', name: 'Website Maintenance', description: 'Provide ongoing support and updates to keep your website running smoothly.' },
+                        { icon: 'fa-tachometer-alt', name: 'Performance Optimization', description: 'Enhance website speed and performance for better user experience.' },
+                        { icon: 'fa-search', name: 'SEO', description: 'Improve your website\'s visibility in search engine results pages.' },
+                        { icon: 'fa-plug', name: 'API Integration', description: 'Connect your website with third-party services through API development.' },
+                        { icon: 'fa-universal-access', name: 'Accessibility Compliance', description: 'Ensure your website meets WCAG standards for accessibility.' },
+                        { icon: 'fa-comments', name: 'Web Consultation', description: 'Provide expert advice on web development strategies and best practices.' }
+                    ]
+                },
+                {
+                    title: 'Photography',
+                    services: [
+                        { icon: 'fa-building', name: 'Commercial Photography', description: 'Capture professional images for marketing and advertising purposes.' },
+                        { icon: 'fa-box', name: 'Product Photography', description: 'Showcase your products with high-quality, detailed images.' },
+                        { icon: 'fa-user', name: 'Portrait Photography', description: 'Create stunning portraits for individuals or corporate headshots.' },
+                        { icon: 'fa-calendar', name: 'Event Photography', description: 'Document special occasions with candid and posed photographs.' },
+                        { icon: 'fa-heart', name: 'Lifestyle Photography', description: 'Capture authentic moments that tell your brand\'s story.' },
+                        { icon: 'fa-edit', name: 'Photo Editing', description: 'Enhance and retouch images to achieve the perfect look.' },
+                        { icon: 'fa-images', name: 'Visual Content Creation', description: 'Develop eye-catching visual content for various marketing channels.' }
+                    ]
+                },
+                {
+                    title: 'Business Solutions',
+                    services: [
+                        { icon: 'fa-lightbulb', name: 'Consultancy Services', description: 'Provide expert advice to improve business operations and strategy.' },
+                        { icon: 'fa-handshake', name: 'Outsourcing Services', description: 'Offer cost-effective solutions for various business processes.' },
+                        { icon: 'fa-shopping-bag', name: 'Procurement Services', description: 'Manage the sourcing and purchasing of goods and services.' },
+                        { icon: 'fa-bullhorn', name: 'Digital Marketing', description: 'Create and execute comprehensive digital marketing strategies.' },
+                        { icon: 'fa-copyright', name: 'Branding & Strategy', description: 'Develop strong brand identities and marketing strategies.' },
+                        { icon: 'fa-cloud', name: 'IT & Cloud Solutions', description: 'Provide cutting-edge IT infrastructure and cloud-based services.' },
+                        { icon: 'fa-tasks', name: 'Project Management', description: 'Oversee and coordinate projects to ensure successful completion.' }
+                    ]
+                }
+            ]);
+
+            const toggleMobileMenu = () => {
+                mobileMenuOpen.value = !mobileMenuOpen.value;
+            };
+
+            const setActiveNavItem = (itemName) => {
+                activeNavItem.value = itemName;
+            };
+
+            const handleMobileMenuClick = (itemName) => {
+                setActiveNavItem(itemName);
+                toggleMobileMenu();
+            };
+
+            return {
+                navItems,
+                mobileMenuOpen,
+                activeNavItem,
+                socialMedia,
+                sections,
+                toggleMobileMenu,
+                setActiveNavItem,
+                handleMobileMenuClick
+            };
+        }
+    }).mount('#app');
+    </script>
+</body>
+</html>
