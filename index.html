@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <link rel="icon" type="image/png" href="images/Logo_page-500.png">
+     <link rel="icon" type="image/png" href="images/Logo_page-500-removebg.png">
     <style>
         .orange-bullet li::before {
             content: "\2022";
@@ -74,7 +74,7 @@
         <section id="home" class="relative h-screen flex items-center justify-center mt-16">
             <!-- Background image -->
             <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fG9ubGluZSUyMHByZXNlbmNlfGVufDB8fDB8fHww" alt="Background" class="w-full h-full object-cover" />
+                <img src="images/comp.jpg" alt="Background" class="w-full h-full object-cover" />
             </div>
             <!-- Overlay -->
             <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
@@ -192,7 +192,7 @@
             <div class="container mx-auto px-4">
                 <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Contact Us</h2>
                 <div class="max-w-4xl mx-auto">
-                    <form @submit.prevent="submitForm" class="bg-white rounded-lg shadow-lg p-8" v-if="!showThankYou">
+                    <form @submit.prevent="submitForm" class="bg-white rounded-lg shadow-lg p-8" v-if="!showThankYou" action="https://formspree.io/f/mqazjdjy" method="post">
                         <div class="mb-6">
                             <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
                             <input
@@ -306,7 +306,9 @@
                 { name: 'Services', link: 'services.html' },
                 { name: 'Testimonials', link: 'index.html#testimonials' },
                 { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Careers', link: 'careers.html' },
                 { name: 'Blog', link: 'blog.html' }
+
             ]);
             const mobileMenuOpen = ref(false);
             const activeNavItem = ref('Home');
@@ -355,10 +357,10 @@
             ]);
 
             const stats = ref([
-                { label: 'Completed Projects', value: 0, target: 234 },
-                { label: 'Clients', value: 0, target: 180 },
-                { label: 'Team Members', value: 0, target: 30 },
-                { label: 'Locations', value: 0, target: 120 },
+                { label: 'Completed Projects', value: 0, target: 23 },
+                { label: 'Clients', value: 0, target: 18 },
+                { label: 'Team Members', value: 0, target: 3 },
+                { label: 'Locations', value: 0, target: 12 },
             ]);
 
             const services = ref([

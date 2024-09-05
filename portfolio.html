@@ -86,7 +86,7 @@
                             <div class="p-4">
                                 <h4 class="text-xl font-semibold mb-2">{{ project.name }}</h4>
                                 <p class="text-gray-600 mb-4">{{ project.description }}</p>
-                                <a :href="project.link" class="text-blue-500 hover:underline">
+                                <a :href="project.link" class="text-blue-500 hover:underline" target="_blank" rel="noopener noreferrer">
                                     {{ service.linkText }} <i class="fas fa-external-link-alt ml-1"></i>
                                 </a>
                             </div>
@@ -146,6 +146,7 @@
                 { name: 'Services', link: 'services.html' },
                 { name: 'Testimonials', link: 'index.html#testimonials' },
                 { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Careers', link: 'careers.html' },
                 { name: 'Blog', link: 'blog.html' }
             ]);
             const mobileMenuOpen = ref(false);
@@ -167,33 +168,33 @@
                     title: 'Web Development',
                     linkText: 'Visit Website>',
                     projects: [
-                        { name: 'E-commerce Platform', description: 'A fully responsive online store with secure checkout.', image: 'images/portfolio/commerce.jpeg', link: '#' },
-                        { name: 'Portfolio Website', description: 'A sleek, modern portfolio for a graphic designer.', image: 'images/portfolio/portfolio.jpeg', link: '#' },
-                        { name: 'Blog Engine', description: 'A custom-built blog engine with a user-friendly CMS.', image: 'images/portfolio/blog.jpeg', link: '#' },
-                        { name: 'Social Media Dashboard', description: 'An all-in-one dashboard for managing social media accounts.', image: 'images/portfolio/socii.jpeg', link: '#' },
-                        { name: 'Real Estate Listings', description: 'A dynamic property listing website with advanced search features.', image: 'images/portfolio/estate.jpeg', link: '#' }
+                        { name: 'E-commerce Platform', description: 'A fully responsive online store with secure checkout.', image: 'images/portfolio/commerce.jpeg', link: 'www.thriftshop.store' },
+                        { name: 'Portfolio Website', description: 'A sleek, modern portfolio for a graphic designer.', image: 'images/portfolio/portfolio.jpeg', link: 'www.abugasimon.com' },
+                        { name: 'Blog Engine', description: 'A custom-built blog engine with a user-friendly CMS.', image: 'images/portfolio/blog.jpeg', link: 'www.abugasimon.com/blog' },
+                        { name: 'Social Media Dashboard', description: 'An all-in-one dashboard for managing social media accounts.', image: 'images/portfolio/socii.jpeg', link: 'https://uonsdapilgrimsministry.netlify.app/' },
+                        { name: 'Real Estate Listings', description: 'A dynamic property listing website with advanced search features.', image: 'images/portfolio/estate.jpeg', link: 'error.html' }
                     ]
                 },
                 {
                     title: 'Photography',
                     linkText: 'See More Photos>',
                     projects: [
-                        { name: 'Wedding Collection', description: 'Capturing beautiful moments from a rustic outdoor wedding.', image: 'images/portfolio/wedding.jpg', link: '#' },
-                        { name: 'Urban Landscapes', description: 'A series showcasing the beauty of city architecture.', image: 'images/portfolio/nairobi.jpeg', link: '#' },
-                        { name: 'Product Photography', description: 'High-quality product shots for an e-commerce client.', image: 'https://img.freepik.com/free-photo/product-photography-shoot-shoes_53876-137635.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'Wedding Collection', description: 'Capturing beautiful moments from a rustic outdoor wedding.', image: 'images/portfolio/wedding.jpg', link: 'error.html'},
+                        { name: 'Urban Landscapes', description: 'A series showcasing the beauty of city architecture.', image: 'images/portfolio/nairobi.jpeg', link: 'error.html' },
+                        { name: 'Product Photography', description: 'High-quality product shots for an e-commerce client.', image: 'https://img.freepik.com/free-photo/product-photography-shoot-shoes_53876-137635.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: 'error.html' },
                         { name: 'Nature Close-ups', description: 'Macro photography revealing the intricate details of nature.', image: 'images/portfolio/nature.jpg', link: '#' },
-                        { name: 'Event Coverage', description: 'Comprehensive photo coverage of a major corporate event.', image: 'https://img.freepik.com/premium-photo/photographer-with-camera_884653-23112.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' }
+                        { name: 'Event Coverage', description: 'Comprehensive photo coverage of a major corporate event.', image: 'https://img.freepik.com/premium-photo/photographer-with-camera_884653-23112.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: 'error.html' }
                     ]
                 },
                 {
                     title: 'Business Solutions',
                     linkText: 'Learn More>',
                     projects: [
-                        { name: 'ERP Implementation', description: 'Successfully deployed an ERP system for a manufacturing company.', image: 'https://img.freepik.com/free-photo/side-view-people-working-together_23-2149831292.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
-                        { name: 'Digital Transformation', description: 'Guided a traditional retailer through a digital transformation journey.', image: 'https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041864.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
-                        { name: 'Supply Chain Optimization', description: 'Streamlined the supply chain process for a global distributor.', image: 'https://img.freepik.com/free-photo/young-worker-organizing-products-depot-listening-music-headset-while-he-works-quality-control-warehouse-employee-checking-logistics-tablet-retail-store-delivery_482257-69571.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
+                        { name: 'ERP Implementation', description: 'Successfully deployed an ERP system for a manufacturing company.', image: 'https://img.freepik.com/free-photo/side-view-people-working-together_23-2149831292.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: 'error.html' },
+                        { name: 'Digital Transformation', description: 'Guided a traditional retailer through a digital transformation journey.', image: 'https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041864.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: 'error.html' },
+                        { name: 'Supply Chain Optimization', description: 'Streamlined the supply chain process for a global distributor.', image: 'https://img.freepik.com/free-photo/young-worker-organizing-products-depot-listening-music-headset-while-he-works-quality-control-warehouse-employee-checking-logistics-tablet-retail-store-delivery_482257-69571.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: 'error.html' },
                         { name: 'CRM Integration', description: 'Integrated a custom CRM solution for improved customer management.', image: 'https://img.freepik.com/premium-photo/professional-crm-image-with-advanced-software-interface_1199394-108989.jpg?size=626&ext=jpg&ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' },
-                        { name: 'Business Intelligence Dashboard', description: 'Developed a BI dashboard for data-driven decision making.', image: 'https://img.freepik.com/free-photo/office-employee-analyzing-business-charts-computer-documents-looking-online-research-data-create-presentation-working-with-information-report-statistics-pc_482257-51736.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: '#' }
+                        { name: 'Business Intelligence Dashboard', description: 'Developed a BI dashboard for data-driven decision making.', image: 'https://img.freepik.com/free-photo/office-employee-analyzing-business-charts-computer-documents-looking-online-research-data-create-presentation-working-with-information-report-statistics-pc_482257-51736.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', link: 'error.html' }
                     ]
                 }
             ];

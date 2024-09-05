@@ -1,0 +1,158 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S!mon - Error Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="images/Logo_page-500.png">
+    <style>
+        .active {
+            color: orange;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div id="app" class="flex flex-col min-h-screen">
+        <!-- Navbar -->
+        <nav class="bg-gray-800 text-white fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="index.html" class="text-xl font-bold">S!mon</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a v-for="item in navItems" :key="item.name" :href="item.link" @click="setActiveNavItem(item.name)" :class="['nav-link', 'hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                                {{ item.name }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:hidden">
+                        <button @click="toggleMobileMenu" class="text-gray-300 hover:bg-gray-700 hover:text-white px-2 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div v-show="mobileMenuOpen" class="md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a v-for="item in navItems" :key="item.name" :href="item.link" @click="handleMobileMenuClick(item.name)" :class="['nav-link', 'block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors duration-300', { 'active': activeNavItem === item.name }]">
+                        {{ item.name }}
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-8 mt-16 flex items-center justify-center">
+            <error-message></error-message>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8 mt-auto">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Important Links -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Important Links</h3>
+                        <ul class="space-y-2">
+                            <li v-for="item in navItems" :key="item.name">
+                                <a :href="item.link" class="hover:text-gray-300 transition-colors duration-300">{{ item.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Social Media -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Social Media</h3>
+                        <div class="flex space-x-4">
+                            <a v-for="(icon, name) in socialMedia" :key="name" :href="icon.url" class="text-2xl hover:text-gray-300 transition-colors duration-300" :aria-label="name">
+                                <i :class="icon.class"></i>
+                            </a>
+                        </div>
+                        <div class="flex space-x-4 mt-8">
+                            <p>&copy;2024</p>
+                            <p> Designed and Built by <a href=""  style="all:unset; color: olive; cursor: pointer;">S!mon </a></p>
+                        </div>
+                    </div>
+                    <!-- Contact Information -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                        <p>00100, University Way, Nairobi Kenya</p>
+                        <p>Email: info@abugas!mon.com</p>
+                        <p>Phone: +254 79988 5892</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    const { createApp, ref, onMounted, onUnmounted } = Vue;
+
+    createApp({
+        components: {
+            'error-message': {
+                template: `
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-8 rounded shadow-md max-w-2xl">
+                        <h2 class="text-2xl font-bold mb-4">Service Temporarily Unavailable</h2>
+                        <p class="mb-4">We apologize for the inconvenience. The service, link, or item you requested is currently not available.</p>
+                        <p class="mb-4">Our team is working diligently to restore access as quickly as possible. We appreciate your patience during this time.</p>
+                        <p class="mb-4">If you have any urgent inquiries or need immediate assistance, please don't hesitate to <a href="index.html#contact" class="text-blue-600 hover:text-blue-800 underline">contact us</a>.</p>
+                        <p>Thank you for your understanding.</p>
+                    </div>
+                `
+            }
+        },
+        setup() {
+            const navItems = ref([
+                { name: 'Home', link: 'index.html' },
+                { name: 'About', link: 'about.html' },
+                { name: 'Portfolio', link: 'portfolio.html' },
+                { name: 'Services', link: 'services.html' },
+                { name: 'Testimonials', link: 'index.html#testimonials' },
+                { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Blog', link: 'blog.html' },
+                { name: 'Careers', link: 'careers.html' }
+            ]);
+            const mobileMenuOpen = ref(false);
+            const activeNavItem = ref('');
+            const socialMedia = ref({
+                Facebook: { url: '#', class: 'fab fa-facebook' },
+                Youtube: { url: '#', class: 'fab fa-youtube' },
+                Whatsapp: { url: '#', class: 'fab fa-whatsapp' },
+                Instagram: { url: '#', class: 'fab fa-instagram' },
+                X: { url: '#', class: 'fab fa-twitter' },
+            });
+
+            const toggleMobileMenu = () => {
+                mobileMenuOpen.value = !mobileMenuOpen.value;
+            };
+
+            const setActiveNavItem = (itemName) => {
+                activeNavItem.value = itemName;
+            };
+
+            const handleMobileMenuClick = (itemName) => {
+                setActiveNavItem(itemName);
+                toggleMobileMenu();
+            };
+
+            return {
+                navItems,
+                mobileMenuOpen,
+                activeNavItem,
+                socialMedia,
+                toggleMobileMenu,
+                setActiveNavItem,
+                handleMobileMenuClick
+            };
+        },
+    }).mount('#app');
+    </script>
+</body>
+</html>

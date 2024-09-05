@@ -92,7 +92,7 @@
                                 <button class="text-gray-600 hover:text-blue-500"><i class="fas fa-comments"></i> {{ post.comments }}</button>
                                 <button class="text-gray-600 hover:text-blue-500"><i class="fas fa-share"></i></button>
                             </div>
-                            <a :href="post.link" class="text-blue-500 hover:underline" target="_blank">Read More</a>
+                            <a :href="post.link" class="text-blue-500 hover:underline" target="_blank" rel="noopener noreferrer">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -153,6 +153,7 @@
                 { name: 'Services', link: 'services.html' },
                 { name: 'Testimonials', link: 'index.html#testimonials' },
                 { name: 'Contact', link: 'index.html#contact' },
+                { name: 'Careers', link: 'careers.html' },
                 { name: 'Blog', link: 'blog.html' }
             ]);
             const mobileMenuOpen = ref(false);
@@ -168,13 +169,13 @@
             const currentPage = ref(1);
             const postsPerPage = ref(6);
             const posts = ref([
-    { id: 1, image: 'images/blog/ruto.jpeg', title: 'Why Ruto Must Go', excerpt: 'There are a million Reasons as to why Ruto has to go, here are the top 26.', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'June 29, 2024', likes: 10, comments: 5, link: '#' },
-    { id: 2, image: 'https://img.freepik.com/free-photo/plant-growing-from-soil_23-2151729549.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Life and Death', excerpt: 'By becoming deeply aware of our mortality, we intensify our experience of every aspect of life..', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'April 3, 2024', likes: 20, comments: 10, link: 'https://docs.google.com/document/d/1PDwrz523lsHhhFaIOD7vhQ7aSzVwddegzarxFQm3W8E/edit?usp=sharing' },
-    { id: 3, image: 'https://img.freepik.com/free-photo/year-elegant-deadline-countdown-time_1203-5008.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Living in the Moment', excerpt: 'Before you know it, its 3 am and you are 80 years old and you can\'t remember what it felt like to have 20 year old thoughts or a 10 year old heart.', author: 'Abuga Simon', authorImage: 'images/DV Photo 10.jpg', date: 'May 3, 2024', likes: 30, comments: 15, link: '#' },
-    { id: 4, image: 'https://img.freepik.com/premium-photo/national-flag-kenya-old-stone-wall_116124-4359.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Pieces of a Broken Nation', excerpt: 'Imagine a tree that has stood tall for as long as you can remember. .', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'May 14, 2024', likes: 40, comments: 20, link: 'https://docs.google.com/document/d/17hQ3-Dk-9IU9BEb8wc8ty9kejx54kwh3KzlnkvtXMzs/edit?usp=sharing' },
-    { id: 5, image: 'https://img.freepik.com/free-photo/ai-technology-microchip-background-digital-transformation-concept_53876-124669.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Will AI replace Humans?', excerpt: 'Probably. Idk. But it depends on what you are doing.', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'June 15, 2024', likes: 50, comments: 25, link: '#' },
-    { id: 6, image: 'images/blog/politics.jpeg', title: 'Why Politics is Often a Contentious Game', excerpt: 'It\'s because everyone has an opinion and believes they are right..', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'June 24, 2024', likes: 60, comments: 30, link: '#' },
-    { id: 7, image: 'images/blog/pablo.jpeg', title: 'After Don Pablo Escobar...', excerpt: 'After died, what happened to the coke industry? Why don\'t we have another Escobar? .', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'July 7, 2024', likes: 70, comments: 35, link: '#' },
+    { id: 1, image: 'images/blog/ruto.jpeg', title: 'Why Ruto Must Go', excerpt: 'There are a million Reasons as to why Ruto has to go, here are the top 26.', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'June 29, 2024', likes: 10, comments: 5, link: 'error.html' },
+    { id: 2, image: 'https://img.freepik.com/free-photo/plant-growing-from-soil_23-2151729549.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Life and Death', excerpt: 'By becoming deeply aware of our mortality, we intensify our experience of every aspect of life..', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'April 3, 2024', likes: 20, comments: 10, link: 'error.html' },
+    { id: 3, image: 'https://img.freepik.com/free-photo/year-elegant-deadline-countdown-time_1203-5008.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Living in the Moment', excerpt: 'Before you know it, its 3 am and you are 80 years old and you can\'t remember what it felt like to have 20 year old thoughts or a 10 year old heart.', author: 'Abuga Simon', authorImage: 'images/DV Photo 10.jpg', date: 'May 3, 2024', likes: 30, comments: 15, link: 'error.html' },
+    { id: 4, image: 'https://img.freepik.com/premium-photo/national-flag-kenya-old-stone-wall_116124-4359.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Pieces of a Broken Nation', excerpt: 'Imagine a tree that has stood tall for as long as you can remember. .', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'May 14, 2024', likes: 40, comments: 20, link: 'error.html' },
+    { id: 5, image: 'https://img.freepik.com/free-photo/ai-technology-microchip-background-digital-transformation-concept_53876-124669.jpg?ga=GA1.1.941918842.1719749248&semt=ais_hybrid', title: 'Will AI replace Humans?', excerpt: 'Probably. Idk. But it depends on what you are doing.', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'June 15, 2024', likes: 50, comments: 25, link: 'error.html' },
+    { id: 6, image: 'images/blog/politics.jpeg', title: 'Why Politics is Often a Contentious Game', excerpt: 'It\'s because everyone has an opinion and believes they are right..', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'June 24, 2024', likes: 60, comments: 30, link: 'error.html' },
+    { id: 7, image: 'images/blog/pablo.jpeg', title: 'After Don Pablo Escobar...', excerpt: 'After died, what happened to the coke industry? Why don\'t we have another Escobar? .', author: 'Abuga Simon', authorImage: 'images/me.jpg', date: 'July 7, 2024', likes: 70, comments: 35, link: 'error.html' },
     // ... other posts
 ]);
 
